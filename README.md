@@ -9,5 +9,5 @@ To visualize the Fourier series of a different function, choose one of the prese
 Change the number of circles displayed by moving the `Maximum Frequency` slider around. To set the animation speed, shift the `Animation Speed` slider. To close the app, click `QUIT`. 
 
 ## References:
-[Wikipedia - Fourier series](https://en.wikipedia.org/wiki/Fourier_series)
+[Wikipedia - Fourier series](https://en.wikipedia.org/wiki/Fourier_series) <br>
 [Chapter 7 of Mark Newman's Computational Physics](http://www-personal.umich.edu/~mejn/cp/)
