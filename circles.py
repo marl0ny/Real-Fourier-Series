@@ -1,5 +1,4 @@
 from functions import FunctionRtoR
-import matplotlib.pyplot as plt
 import numpy as np
 from sympy import abc
 from typing import List
@@ -79,7 +78,7 @@ class Circles:
                 amplitude = np.exp(-2*np.pi*i*1.0j*f[j])*a[j]
                 circles[k] = amplitude + self._circles[k - 1]
                 self._draw_circle(circles[k - 1], amplitude, k)
-        stop_index = (self.resolution)*(self._pts_per_circle + 1) - 1
+        stop_index = self.resolution*(self._pts_per_circle + 1) - 1
         for j in range(stop_index, len(circles)):
             circles[j] = circles[stop_index]
         self._plot.set_xdata(np.imag(circles))
@@ -112,7 +111,7 @@ class Circles:
         """
         self._data.set_number_of_points(n)
 
-    def get_number_of_points(self, n: int) -> None:
+    def get_number_of_points(self) -> int:
         """
         Get the number of points.
         """
@@ -147,7 +146,7 @@ class FourierData:
         self.y_limits = [-1, 1]
         self.t = np.linspace(-period/2,
                              period*(1.0/2.0 - 1.0/256.0),
-                             256.0)
+                             256)
         kwargs = self.function.get_default_values()
         args = (kwargs[s] for s in kwargs)
         self.f = np.fft.rfftfreq(self.n)
@@ -208,9 +207,9 @@ class FourierData:
         self.n = n
         start = self.t[0]
         period = self.period
-        self.t = np.array(start,
-                          start + period*(1.0 - 1.0/self.n),
-                          self.n)
+        self.t = np.linspace(start,
+                             start + period*(1.0 - 1.0/self.n),
+                             self.n)
         self._update_data(self.t,
                           *self.function.get_default_values())
 
@@ -219,9 +218,9 @@ class FourierData:
         Set the period.
         """
         self.period = period
-        self.t = np.array(start,
-                          start + period*(1.0 - 1.0/self.n),
-                          self.n)
+        self.t = np.linspace(start,
+                             start + period*(1.0 - 1.0/self.n),
+                             self.n)
         self._update_data(self.t,
                           *self.function.get_default_values())
 

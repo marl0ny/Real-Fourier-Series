@@ -96,6 +96,7 @@ class App(FourierAnimation):
         self.sliderslist = []
         self.circles_slider = None
         self.slider_speed = None
+        self._speed = 1
         self.quit_button = None
         self._number_of_circles = 128
         self._set_widgets_after_param_sliders()
@@ -121,7 +122,7 @@ class App(FourierAnimation):
         self.slider_speed.grid(row=k+2, column=3,
                                sticky=tk.N + tk.E + tk.W,
                                padx=(10, 10))
-        self.slider_speed.set(1)
+        self.slider_speed.set(self._speed)
         self.quit_button = tk.Button(
                 self.window, text='QUIT',
                 command=lambda *args: [
@@ -134,6 +135,7 @@ class App(FourierAnimation):
         Set the speed of the animation.
         """
         j = self.slider_speed.get()
+        self._speed = j
         self.set_speed(j)
 
     def set_function_entry(self, *event: tk.Event):
