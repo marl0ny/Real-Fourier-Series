@@ -4,7 +4,7 @@ from animator import Animator
 from circles import Circles, VerticalRescaler
 from sympy import abc
 from functions import FunctionRtoR
-from time import perf_counter
+# from time import perf_counter
 
 
 class FourierAnimation(Animator):
@@ -50,7 +50,9 @@ class FourierAnimation(Animator):
         self.x = np.roll(self.x, self.counts)
         function_plot, = ax.plot(np.linspace(2.0, 6.0, 256),
                                  self.x, linewidth=1.0,
-                                 color="gray")
+                                 # color="black"
+                                 color="gray"
+                                 )
         amps = self.circles.get_amplitudes()
         self.x2 = np.fft.irfft(amps)
         self.x2 = np.roll(self.x2, self.counts)
@@ -149,6 +151,7 @@ if __name__ == "__main__":
     # from matplotlib import interactive
     # interactive(True)
     # a = FourierAnimation("exp(-t**2/0.16**2)- 0.5")
-    a = FourierAnimation("sin(t)")
+    a = FourierAnimation("exp(-t**2/0.16**2)")
+    a.animation_interval = 30
     a.animation_loop()
     plt.show()

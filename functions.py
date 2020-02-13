@@ -26,11 +26,14 @@ def rect(x: np.ndarray) -> np.ndarray:
         y += np.sin(x*i)/(np.pi*i)
     return 2*(y - 5/2)
 
-def noise(x: np.ndarray) -> np.ndarray:
+def noise(x: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
     """
     This is the noise function.
     """
-    return np.array([2.0*np.random.rand() - 1.0 for _ in range(len(x))])
+    if isinstance(x, np.ndarray):
+        return np.array([2.0*np.random.rand() - 1.0 for _ in range(len(x))])
+    else:
+        return 2.0*np.random.rand() - 1.0
 
 
 def multiplies_var(main_var: basic.Basic, arb_var: basic.Basic,
@@ -70,6 +73,16 @@ def multiplies_var(main_var: basic.Basic, arb_var: basic.Basic,
     >>> multiplies_var(abc.x, abc.e, expr)
     False
     >>> multiplies_var(abc.x, abc.f, expr)
+    False
+    
+    >>> expr = parse_expr("a*sinh(x*(b**2 + 45.0*c)) + d")
+    >>> multiplies_var(abc.x, abc.a, expr)
+    True
+    >>> multiplies_var(abc.x, abc.b, expr)
+    True
+    >>> multiplies_var(abc.x, abc.c, expr)
+    True
+    >>> multiplies_var(abc.x, abc.d, expr)
     False
     """
     arg_list = []
@@ -168,6 +181,16 @@ class FunctionRtoR:
         return {s:
                 float(multiplies_var(self.symbols[0], s, self._symbolic_func))
                 for s in self.parameters}
+
+    def get_enumerated_default_values(self) -> dict:
+        """
+        Get an enumerated dict of the suggested default values for each parameter
+        used in this function.
+        """
+        return {i: [s, 
+                float(multiplies_var(
+                      self.symbols[0], s, self._symbolic_func))]
+                for i, s in enumerate(self.parameters)}
 
     def derivative(self) -> None:
         """
