@@ -1,11 +1,9 @@
 """
 The main application
 """
-from animation import FourierAnimation
+from animation import FourierAnimation, VariableNotFoundError
 from matplotlib.backends import backend_tkagg
 import tkinter as tk
-
-from functions import VariableNotFoundError
 
 
 class App(FourierAnimation):
