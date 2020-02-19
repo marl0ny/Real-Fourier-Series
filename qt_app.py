@@ -208,26 +208,27 @@ class App(QtWidgets.QMainWindow):
         Parameters:
          text: function expressed as a string.
         """
-        self._setting_sliders = True
-        self.destroy_sliders()
-        function_name = text
-        ani = self.canvas.get_animation()
-        ani.set_function(function_name)
-        d = ani.function.get_enumerated_default_values()
-        for i in range(len(d)):
-            symbol = d[i][0]
-            value = d[i][1]
-            slider_box = HorizontalSliderBox(self, symbol)
-            self.control_widgets.addWidget(slider_box)
-            slider_box.set_range(-10.0, 10.0)
-            slider_box.set_number_of_ticks(2001)
-            slider_box.set_observers([self])
-            slider_box.set_slider(value)
-            self.sliders.append(slider_box)
-        self.control_widgets.addWidget(self.circles_slider)
-        self.control_widgets.addWidget(self.slider_speed)
-        self._setting_sliders = False
-        self.on_slider_changed({})
+        if text.strip() != "":
+            self._setting_sliders = True
+            self.destroy_sliders()
+            function_name = text
+            ani = self.canvas.get_animation()
+            ani.set_function(function_name)
+            d = ani.function.get_enumerated_default_values()
+            for i in range(len(d)):
+                symbol = d[i][0]
+                value = d[i][1]
+                slider_box = HorizontalSliderBox(self, symbol)
+                self.control_widgets.addWidget(slider_box)
+                slider_box.set_range(-10.0, 10.0)
+                slider_box.set_number_of_ticks(2001)
+                slider_box.set_observers([self])
+                slider_box.set_slider(value)
+                self.sliders.append(slider_box)
+            self.control_widgets.addWidget(self.circles_slider)
+            self.control_widgets.addWidget(self.slider_speed)
+            self._setting_sliders = False
+            self.on_slider_changed({})
 
     def on_slider_changed(self, slider_input: dict) -> None:
         """
