@@ -118,10 +118,10 @@ class App(QtWidgets.QMainWindow):
         self.circles_slider = HorizontalSliderBox(self, "Maximum Frequency")
         self.slider_speed = HorizontalSliderBox(self, "Speed")
         self.circles_slider.set_observers([self])
-        self.circles_slider.set_range(1, 128)
+        self.circles_slider.set_range(1, 80)
         self.circles_slider.set_value_string_format("%d")
-        self.circles_slider.set_number_of_ticks(128)
-        self.circles_slider.set_slider(128)
+        self.circles_slider.set_number_of_ticks(80)
+        self.circles_slider.set_slider(80)
         self.slider_speed.set_observers([self])
         self.slider_speed.set_range(-5, 5)
         self.slider_speed.set_value_string_format("%d")
@@ -130,16 +130,16 @@ class App(QtWidgets.QMainWindow):
         # self.control_widgets.addWidget(self.mouse_dropdown)
         self.control_widgets.addWidget(self.dropdown)
         self.control_widgets.addWidget(self.entry)
-        self.control_widgets.addWidget(self.slider_speed)
         self.control_widgets.addWidget(self.circles_slider)
+        self.control_widgets.addWidget(self.slider_speed)
 
     def show_instructions(self) -> None:
         """
         Show instructions.
         """
         message = (
-            "This app displays the (discrete) Fourier Series of "
-            "real periodic well-behaved functions "
+            "This app displays the (discrete) Fourier series of "
+            "real, periodic, and well-behaved functions "
             "using rotating circles to represent each term. "
             "To visualize the Fourier Series for a different function, "
             "choose one of the preset functions in the "
@@ -147,7 +147,7 @@ class App(QtWidgets.QMainWindow):
             "or enter a new function in the Enter waveform f(t) entry box. "
             "The function that you entered must be a function of t. "
             "This function can depend on other variables, where "
-            "the value of these variables are changed through sliders. "
+            "these variables are changed through sliders. "
             "Change the number of circles displayed by changing the value "
             "of the Maximum Frequency slider. "
             "To change the animation rate, use the Speed slider. "
@@ -165,8 +165,7 @@ class App(QtWidgets.QMainWindow):
                    r"<a href=https://wiki.qt.io/Qt_for_PythonPySide2>PySide2</a>,"
                    r" which is published under the"
                    r" <a href=https://www.gnu.org/licenses/lgpl-3.0.en.html>LGPL</a>."
-                   r" If you redistribute and/or modify this program, "
-                   r" please comply with the terms set by the LGPL.")
+                   )
         self.message_box.about(self, "About", message)
 
     def on_dropdown_changed(self, text: Union[int, str]) -> None:
@@ -209,11 +208,15 @@ class App(QtWidgets.QMainWindow):
          text: function expressed as a string.
         """
         if text.strip() != "":
+            function_name = text
+            try:
+                ani = self.canvas.get_animation()
+                ani.set_function(function_name)
+            except Exception as e:
+                print(e)
+                return
             self._setting_sliders = True
             self.destroy_sliders()
-            function_name = text
-            ani = self.canvas.get_animation()
-            ani.set_function(function_name)
             d = ani.function.get_enumerated_default_values()
             for i in range(len(d)):
                 symbol = d[i][0]

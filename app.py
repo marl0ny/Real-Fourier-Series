@@ -96,14 +96,14 @@ class App(FourierAnimation):
         self.slider_speed = None
         self._speed = 1
         self.quit_button = None
-        self._number_of_circles = 128
+        self._number_of_circles = 80
         self._set_widgets_after_param_sliders()
 
     def _set_widgets_after_param_sliders(self, k: int = 5) -> None:
         """
         Set widgets after parameter sliders
         """
-        self.circles_slider = tk.Scale(self.window, from_=1, to=128,
+        self.circles_slider = tk.Scale(self.window, from_=1, to=80,
                                        label="Maximum Frequency: ",
                                        orient=tk.HORIZONTAL,
                                        # length=128,
