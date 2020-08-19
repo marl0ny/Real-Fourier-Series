@@ -1,6 +1,7 @@
 import sys
 from qt_widgets import QtWidgets, QtCore, QtGui
 from qt_widgets import HorizontalSliderBox, HorizontalEntryBox
+from qt_widgets import VariableSlidersManager
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from animation import FourierAnimation
 from typing import Union
@@ -72,10 +73,13 @@ class App(QtWidgets.QMainWindow):
         dialogue = QtWidgets.QMessageBox(self)
         # dialogue.aboutQt(self, "Title")
         self.message_box = dialogue
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.help.addAction("instructions", self.show_instructions)
         self.help.addAction("about the GUI", self.show_about_gui)
-        self.sliders = []
+        # self._scroll_area = None
+        # self.sliders = []
         self._setting_sliders = False
+        self.variable_sliders = VariableSlidersManager(parent=self)
         self.window = QtWidgets.QWidget(self)
         self.layout = QtWidgets.QHBoxLayout(self.window)
         rect = QtWidgets.QApplication.desktop().screenGeometry()
@@ -104,7 +108,11 @@ class App(QtWidgets.QMainWindow):
             "sinc": "3*sinc(k*(6.5)*t)/2 - 1/2",
             "rectangle": "3*rect(t)/2",
             "sawtooth": "t/pi",
-            "triangle": "abs(t)"
+            "triangle": "abs(t)",
+            # "function 1": "a*exp(-rect(k*t)**2)",
+            # "wave packet": "sin(4*k*t)*exp(-(t - x)**2/(2*sigma**2))",
+            # "sum of cosines": "0" + 
+            # "".join([" + a_%d*cos(%d*t)" % (i, i) for i in range(1, 8)])
             }
         dropdown_list = ["Preset Waveform f(t)"]
         dropdown_list.extend([key for key in self.dropdown_dict])
@@ -122,11 +130,13 @@ class App(QtWidgets.QMainWindow):
         self.circles_slider.set_value_string_format("%d")
         self.circles_slider.set_number_of_ticks(80)
         self.circles_slider.set_slider(80)
+        self.circles_slider.toggle_range_controls()
         self.slider_speed.set_observers([self])
         self.slider_speed.set_range(-5, 5)
         self.slider_speed.set_value_string_format("%d")
         self.slider_speed.set_number_of_ticks(11)
         self.slider_speed.set_slider(1)
+        self.slider_speed.toggle_range_controls()
         # self.control_widgets.addWidget(self.mouse_dropdown)
         self.control_widgets.addWidget(self.dropdown)
         self.control_widgets.addWidget(self.entry)
@@ -215,19 +225,11 @@ class App(QtWidgets.QMainWindow):
             except Exception as e:
                 print(e)
                 return
-            self._setting_sliders = True
             self.destroy_sliders()
+            self._setting_sliders = True
             d = ani.function.get_enumerated_default_values()
-            for i in range(len(d)):
-                symbol = d[i][0]
-                value = d[i][1]
-                slider_box = HorizontalSliderBox(self, symbol)
-                self.control_widgets.addWidget(slider_box)
-                slider_box.set_range(-10.0, 10.0)
-                slider_box.set_number_of_ticks(2001)
-                slider_box.set_observers([self])
-                slider_box.set_slider(value)
-                self.sliders.append(slider_box)
+            self.variable_sliders.set_sliders(
+                [self.control_widgets], d)
             self.control_widgets.addWidget(self.circles_slider)
             self.control_widgets.addWidget(self.slider_speed)
             self._setting_sliders = False
@@ -248,11 +250,8 @@ class App(QtWidgets.QMainWindow):
             elif slider_input['id'] == "Maximum Frequency":
                 ani.set_number_of_circles(int(slider_input['value'])+1)
         else:
-            params = []
-            if self.sliders != [] and not self._setting_sliders:
-                for slider in self.sliders:
-                    info = slider.get_slider_info()
-                    params.append(info['value'])
+            if not self._setting_sliders:
+                params = self.variable_sliders.get_slider_parameters()
                 ani = self.canvas.get_animation()
                 ani.set_params(*params)
 
@@ -260,12 +259,8 @@ class App(QtWidgets.QMainWindow):
         """
         Destroy the sliders.
         """
-        while self.sliders:
-            slider_box = self.sliders.pop()
-            self.control_widgets.removeWidget(slider_box)
-            self.layout.removeWidget(slider_box)
-            slider_box.destroy_slider()
-            slider_box.close()
+        self.variable_sliders.destroy_sliders(
+            [self.control_widgets, self.layout])
         self.control_widgets.removeWidget(self.circles_slider)
         self.control_widgets.removeWidget(self.slider_speed)
 
