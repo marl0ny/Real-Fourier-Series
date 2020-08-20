@@ -64,11 +64,11 @@ class App(QtWidgets.QMainWindow):
         self.setWindowTitle("A simple GUI")
         self.menu_bar = self.menuBar()
         file_menu = self.menu_bar.addMenu('&file')
-        file_menu.addAction("Save figure", 
+        file_menu.addAction("Save figure",
                             lambda: self.canvas.get_animation(
                             ).figure.savefig("figure.png"))
-        file_menu.addAction("Quit", 
-                            lambda : QtWidgets.QApplication.exit())
+        file_menu.addAction("Quit",
+                            lambda: QtWidgets.QApplication.exit())
         self.help = self.menu_bar.addMenu('&help')
         dialogue = QtWidgets.QMessageBox(self)
         # dialogue.aboutQt(self, "Title")
@@ -111,7 +111,7 @@ class App(QtWidgets.QMainWindow):
             "triangle": "abs(t)",
             # "function 1": "a*exp(-rect(k*t)**2)",
             # "wave packet": "sin(4*k*t)*exp(-(t - x)**2/(2*sigma**2))",
-            # "sum of cosines": "0" + 
+            # "sum of cosines": "0" +
             # "".join([" + a_%d*cos(%d*t)" % (i, i) for i in range(1, 8)])
             }
         dropdown_list = ["Preset Waveform f(t)"]
@@ -129,13 +129,13 @@ class App(QtWidgets.QMainWindow):
         self.circles_slider.set_range(1, 80)
         self.circles_slider.set_value_string_format("%d")
         self.circles_slider.set_number_of_ticks(80)
-        self.circles_slider.set_slider(80)
+        self.circles_slider.set_value(80)
         self.circles_slider.toggle_range_controls()
         self.slider_speed.set_observers([self])
         self.slider_speed.set_range(-5, 5)
         self.slider_speed.set_value_string_format("%d")
         self.slider_speed.set_number_of_ticks(11)
-        self.slider_speed.set_slider(1)
+        self.slider_speed.set_value(1)
         self.slider_speed.toggle_range_controls()
         # self.control_widgets.addWidget(self.mouse_dropdown)
         self.control_widgets.addWidget(self.dropdown)
@@ -172,9 +172,11 @@ class App(QtWidgets.QMainWindow):
         Show the about dialog.
         """
         message = (r"The GUI is built using "
-                   r"<a href=https://wiki.qt.io/Qt_for_PythonPySide2>PySide2</a>,"
+                   r"<a href=https://wiki.qt.io/Qt_for_PythonPySide2>"
+                   r"PySide2</a>,"
                    r" which is published under the"
-                   r" <a href=https://www.gnu.org/licenses/lgpl-3.0.en.html>LGPL</a>."
+                   r" <a href=https://www.gnu.org/licenses/"
+                   r"lgpl-3.0.en.html>LGPL</a>."
                    )
         self.message_box.about(self, "About", message)
 
