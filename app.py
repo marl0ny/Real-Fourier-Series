@@ -43,7 +43,10 @@ class App(FourierAnimation):
         #    [Question by user user1764386:
         #     https://stackoverflow.com/users/1764386/user1764386]
         #
-        self.figure.patch.set_facecolor(colour)
+        try:
+            self.figure.patch.set_facecolor(colour)
+        except ValueError:
+            print(colour)
 
         self.canvas = backend_tkagg.FigureCanvasTkAgg(
             self.figure,
