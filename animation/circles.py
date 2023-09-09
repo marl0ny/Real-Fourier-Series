@@ -17,11 +17,11 @@ class Circles:
         # self._data.set_y_range(ax.get_ylim())
         self.resolution = self._data.n//2 + 1
         self._circles = np.zeros(
-            [(self._pts_per_circle + 1)*self.resolution], np.complex)
+            [(self._pts_per_circle + 1)*self.resolution], np.complex128)
         self._gen_circle = np.array([np.exp(
             2*1.0j*np.pi*((m + 1)/self._pts_per_circle))
                                      for m in range(self._pts_per_circle)],
-                                    np.complex)
+                                    np.complex128)
         plot, = ax.plot(np.imag(self._circles), np.real(self._circles),
                         linewidth=1.0, color="black", animated=True)
         self._EPSILON = (
@@ -53,7 +53,7 @@ class Circles:
             amps[i] = 0.0
         return amps
 
-    def get_end_point(self) -> np.complex:
+    def get_end_point(self) -> np.complex128:
         """
         Get the end point of the rotating complex exponentials.
         """
@@ -154,8 +154,8 @@ class FourierData:
         self.f = np.array([
                 self.f[self._sort_arr[i]]
                 for i in range(len(self.f))])
-        self.x = np.array([], np.float)
-        self.a = np.array([], np.float)
+        self.x = np.array([], np.float64)
+        self.a = np.array([], np.float64)
         self._rescale = VerticalRescaler()
         self._update_data(self.t, *args)
 
